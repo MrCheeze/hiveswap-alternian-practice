@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hiveswap Alternian Practice</title>
+		<script src="jquery-1.12.0.min.js"></script>
+		<script src="words.js"></script>
+		<style>
+			@font-face {
+				font-family: Alternian;
+				src: url(hiveswap_alternian_font_by_orangeypeels-dbnnyid.ttf);
+			}
+			body {
+				background: #ef98bf;
+				text-align: center;
+			}
+			.alternian {
+				font-family: Alternian;
+				font-size: 125%;
+				display: inline-block;
+				transform: translateY(7%);
+			}
+			.goal {
+				font-family: Courier New, Courier;
+				font-weight: bold;
+				color: white;
+				text-shadow: 2px 2px black;
+				font-size: 400%;
+				margin: 0;
+			}
+			.guessedWord {
+				color: #2ed73a;
+			}
+			button {
+				font-size: 100%;
+			}
+			.buttons {
+				font-size: 400%;
+			}
+		</style>
+	</head>
+	<body>
+		<p id="lastWord">&nbsp;</p>
+		<p class="goal"><span class="alternian guessedWord"></span><span id="unguessedWord"></span></p>
+		<p class="buttons">
+			<button id="first" class="alternian" onclick="clickButton(this)"></button>
+			<button id="second" class="alternian" onclick="clickButton(this)"></button>
+			<button id="third" class="alternian" onclick="clickButton(this)"></button>
+			<button id="fourth" class="alternian" onclick="clickButton(this)"></button>
+		</p>
+		<script>
+			function randomWord() {
+				$('#unguessedWord').text( words[Math.floor(Math.random()*words.length)].toLowerCase() );
+				$('.guessedWord').text('');
+				randomChoices();
+				$('.alternian').removeClass('alternian');
+				if (Math.random() < 0.5) {
+					$('.guessedWord').addClass('alternian');
+					$('button').addClass('alternian');
+				} else {
+					$('#unguessedWord').addClass('alternian');
+				}
+			}
+			function randomChoices() {
+				var right = $('#unguessedWord').text()[0];
+				var wrong1 = 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random()*26)];
+				var wrong2 = 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random()*26)];
+				var wrong3 = 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random()*26)];
+				if (Math.random() < 0.25) {
+					$('#first').text(right);
+					$('#second').text(wrong1);
+					$('#third').text(wrong2);
+					$('#fourth').text(wrong3);
+				} else if (Math.random() < 0.5) {
+					$('#first').text(wrong1);
+					$('#second').text(right);
+					$('#third').text(wrong2);
+					$('#fourth').text(wrong3);
+				} else if (Math.random() < 0.75) {
+					$('#first').text(wrong1);
+					$('#second').text(wrong2);
+					$('#third').text(right);
+					$('#fourth').text(wrong3);
+				} else {
+					$('#first').text(wrong1);
+					$('#second').text(wrong2);
+					$('#third').text(wrong3);
+					$('#fourth').text(right);
+				}
+			}
+			randomWord();
+			
+			function clickButton(element) {
+				var button = $(element);
+				var unguessedWord = $('#unguessedWord');
+				var guessedWord = $('.guessedWord');
+				var lastWord = $('#lastWord');
+				
+				if (button.text() == unguessedWord.text()[0]) {
+					guessedWord.text(guessedWord.first().text() + unguessedWord.text()[0]);
+					unguessedWord.text(unguessedWord.text().slice(1));
+					if (unguessedWord.text() == '') {
+						lastWord.text(guessedWord.text());
+						randomWord();
+					} else {
+						randomChoices();
+					}
+				} else {
+					unguessedWord.text(guessedWord.first().text() + unguessedWord.text());
+					guessedWord.text('');
+					randomChoices();
+				}
+			}
+		</script>
+	</body>
+</html>
